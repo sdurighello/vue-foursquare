@@ -70,20 +70,21 @@ body
                                 )
                                     el-card(
                                         :body-style="{ padding: '0px' }",
-                                        :style="{ height: '200px', marginBottom: '20px'}"
+                                        :style="{ height: '200px', marginBottom: '20px', cursor: 'pointer' }",
+                                        @click.native="selectVenue(venue)"
                                     )
                                         div(:style="{ padding: '14px' }")
                                             p {{venue.name}}
                                             el-button.float-right(
                                                 v-if="!venue.favourite",
-                                                @click="addToFavourites(venue)",
+                                                @click.stop="addToFavourites(venue)",
                                                 type="success",
                                                 size="mini",
                                                 :round="true"
                                             ) Add to favourites
                                             el-button.float-right(
                                                 v-if="venue.favourite",
-                                                @click="removeFromFavourites(venue)",
+                                                @click.stop="removeFromFavourites(venue)",
                                                 type="danger",
                                                 size="mini",
                                                 :round="true"
@@ -92,6 +93,58 @@ body
                     label="My favourite venues",
                     name="favourites"
                 )
+                    .row
+                        .col-md-4
+                            el-card(
+                                v-for="venue in favourites",
+                                :key="venue.id"
+                                :body-style="{ padding: '0px' }",
+                                :style="{ height: '200px', marginBottom: '20px', cursor: 'pointer' }",
+                                :class="{ border: selectedVenue && selectedVenue.id === venue.id }",
+                                :shadow="selectedVenue && selectedVenue.id === venue.id ? 'never' : 'always'",
+                                @click.native="selectVenue(venue)"
+                            )
+                                div(:style="{ padding: '14px' }")
+                                    p {{venue.name}}
+                                    el-button.float-right(
+                                        v-if="!venue.favourite",
+                                        @click.stop="addToFavourites(venue)",
+                                        type="success",
+                                        size="mini",
+                                        :round="true"
+                                    ) Add to favourites
+                                    el-button.float-right(
+                                        v-if="venue.favourite",
+                                        @click.stop="removeFromFavourites(venue)",
+                                        type="danger",
+                                        size="mini",
+                                        :round="true"
+                                    ) Remove from favourites
+                        .col-md-8
+                            el-card(v-if="selectedVenue && selectedVenue.id")
+                                p {{selectedVenue.name}}
+                                p {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
+                                p {{selectedVenue.location.distance}} meters
+                                p {{selectedVenue.categories[0].name}}
+                                p {{selectedVenue.verified}}
+                                el-input(
+                                    type="textarea",
+                                    :rows="10",
+                                    placeholder="Enter a note to self ...",
+                                    v-model="selectedVenueComment"
+                                )
+                                el-button.button.float-right(
+                                    @click.stop="updateComment",
+                                    type="success",
+                                    size="mini",
+                                    :round="true"
+                                ) Update
+                                el-button.button.float-right(
+                                    @click.stop="cancelUpdateComment",
+                                    type="danger",
+                                    size="mini",
+                                    :round="true"
+                                ) Cancel
 </template>
 
 <script>
@@ -110,7 +163,9 @@ export default {
             keyword: '',
             selectedTab: 'filters',
             coordinates: '',
-            venues: []
+            venues: [],
+            selectedVenue: null,
+            selectedVenueComment: ''
         }
     },
     computed: {
@@ -118,10 +173,11 @@ export default {
             return this.$store.getters.getFavourites
         },
         computedVenues() {
-            return this.venues.map(venue => ({
-                ...venue,
-                favourite: !!this.favourites.find(fav => fav.id === venue.id)
-            }))
+            return this.venues.map((venue) => {
+                const found = this.favourites.find(fav => fav.id === venue.id)
+                venue.favourite = !!found
+                return venue
+            })
         }
     },
     async created() {
@@ -169,12 +225,27 @@ export default {
             }
         },
         addToFavourites(venue) {
-            delete venue.favourite
+            venue.favourite = true
             this.$store.dispatch('addFavourite', venue)
         },
         removeFromFavourites(venue) {
-            delete venue.favourite
             this.$store.dispatch('removeFavourite', venue)
+            this.resetSelectedVenue()
+        },
+        selectVenue(venue) {
+            console.log('selected', venue)
+            this.selectedVenue = venue
+            this.selectedVenueComment = venue.comment
+        },
+        resetSelectedVenue() {
+            this.selectedVenue = null
+            this.selectedVenueComment = ''
+        },
+        updateComment() {
+            this.$store.dispatch('updateComment', { venue: this.selectedVenue, comment: this.selectedVenueComment })
+        },
+        cancelUpdateComment() {
+            this.selectedVenueComment = this.selectedVenue.comment
         }
     }
 }
@@ -190,5 +261,8 @@ export default {
 }
 .form {
     padding: 20px;
+}
+.border {
+    border: '6px red solid';
 }
 </style>

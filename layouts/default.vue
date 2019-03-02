@@ -49,8 +49,8 @@ footer {
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background: black;
-    color: white;
+    background: lightblue;
+    color: darkblue;
     text-align: center;
     letter-spacing: 0.03em;
     margin-top: 10px;
