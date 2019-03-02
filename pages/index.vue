@@ -65,21 +65,29 @@ body
                         .col-md-8
                             .row
                                 .col-md-4(
-                                    v-for="venue in venues",
+                                    v-for="venue in computedVenues",
                                     :key="venue.id"
                                 )
                                     el-card(
                                         :body-style="{ padding: '0px' }",
-                                        :style="{ height: '100px', marginBottom: '20px'}"
+                                        :style="{ height: '200px', marginBottom: '20px'}"
                                     )
                                         div(:style="{ padding: '14px' }")
                                             p {{venue.name}}
                                             el-button.float-right(
+                                                v-if="!venue.favourite",
                                                 @click="addToFavourites(venue)",
                                                 type="success",
                                                 size="mini",
                                                 :round="true"
                                             ) Add to favourites
+                                            el-button.float-right(
+                                                v-if="venue.favourite",
+                                                @click="removeFromFavourites(venue)",
+                                                type="danger",
+                                                size="mini",
+                                                :round="true"
+                                            ) Remove from favourites
                 el-tab-pane(
                     label="My favourite venues",
                     name="favourites"
@@ -103,6 +111,17 @@ export default {
             selectedTab: 'filters',
             coordinates: '',
             venues: []
+        }
+    },
+    computed: {
+        favourites() {
+            return this.$store.getters.getFavourites
+        },
+        computedVenues() {
+            return this.venues.map(venue => ({
+                ...venue,
+                favourite: !!this.favourites.find(fav => fav.id === venue.id)
+            }))
         }
     },
     async created() {
@@ -150,7 +169,12 @@ export default {
             }
         },
         addToFavourites(venue) {
-            console.log(venue)
+            delete venue.favourite
+            this.$store.dispatch('addFavourite', venue)
+        },
+        removeFromFavourites(venue) {
+            delete venue.favourite
+            this.$store.dispatch('removeFavourite', venue)
         }
     }
 }
