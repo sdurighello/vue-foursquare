@@ -1,6 +1,6 @@
-const pkg = require('./package')
 import path from 'path'
 import fs from 'fs'
+const pkg = require('./package')
 
 module.exports = {
     mode: 'spa',
