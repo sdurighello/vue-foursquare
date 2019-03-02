@@ -9,11 +9,19 @@ module.exports = {
   },
   extends: [
     '@nuxtjs',
-    'plugin:prettier/recommended'
+    'plugin:vue/essential'
   ],
   plugins: [
-    'prettier'
+    // 'prettier'
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'no-param-reassign': 0,
+    'no-multi-assign': 0,
+    'indent': ["error", 4, { "SwitchCase": 1 }],
+    'import/first': 0,
+    'no-console': 0,
+    'no-tabs': 0,
+    'vue/html-indent': ["error", 4]
+  }
 }
