@@ -1,4 +1,6 @@
 const pkg = require('./package')
+import path from 'path'
+import fs from 'fs'
 
 module.exports = {
     mode: 'spa',
@@ -45,6 +47,14 @@ module.exports = {
   */
     axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    },
+
+    // Server configuration
+    server: {
+        https: {
+            key: fs.readFileSync(path.resolve(__dirname, 'server.key')),
+            cert: fs.readFileSync(path.resolve(__dirname, 'server.crt'))
+        }
     },
 
     /*
