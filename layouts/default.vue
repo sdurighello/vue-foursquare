@@ -33,7 +33,7 @@ html {
 }
 
 body {
-    margin: 0 0 50px;
+    margin: 5px 5px 50px 5px;
     /* bottom = footer height */
 }
 
