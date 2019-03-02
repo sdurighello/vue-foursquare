@@ -29,8 +29,7 @@ module.exports = {
     css: [
         'element-ui/lib/theme-chalk/index.css',
         'bootstrap/dist/css/bootstrap.css',
-        'bootstrap-vue/dist/bootstrap-vue.css',
-        'v-toaster/dist/v-toaster.css'
+        'bootstrap-vue/dist/bootstrap-vue.css'
     ],
 
     /*
@@ -38,8 +37,7 @@ module.exports = {
   */
     plugins: [
         '@/plugins/element-ui',
-        '@/plugins/bootstrap-vue',
-        '@/plugins/toaster'
+        '@/plugins/bootstrap-vue'
     ],
 
     /*

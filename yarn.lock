@@ -7361,10 +7361,6 @@ uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
-v-toaster@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/v-toaster/-/v-toaster-1.0.3.tgz#2c768cea82a5a9e5324f3e0b02703230ce98146f"
-
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz#fc91f6b9c7ba15c857f4cb2c5defeec39d4f410a"
