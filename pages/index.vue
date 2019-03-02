@@ -1,68 +1,68 @@
-<template>
-    <section class="container">
-        <div>
-            <logo />
-            <h1 class="title">
-                vue-foursquare
-            </h1>
-            <h2 class="subtitle">
-                Vue app using Foursquare APIs and user location
-            </h2>
-            <div class="links">
-                <a
-                    href="https://nuxtjs.org/"
-                    target="_blank"
-                    class="button--green"
-                >Documentation</a>
-                <a
-                    href="https://github.com/nuxt/nuxt.js"
-                    target="_blank"
-                    class="button--grey"
-                >GitHub</a>
-            </div>
-        </div>
-    </section>
+<template lang="pug">
+div
+    .row
+        .col-md-4
+        .col-md-8
+            el-card(:style="{ 'margin-right': '5px' }")
+                .row
+                    .col-md-4
+                        .text-center
+                            |Choose
+                            el-button(
+                                type="text",
+                                @click="locationChoice = 'location'",
+                            )    your location
+                            |  or
+                            el-button(
+                                type="text",
+                                @click="locationChoice = 'city'",
+                            )  a city
+                        el-input(
+                            placeholder="Enter city",
+                            v-model="city",
+                        )
+                    .col-md-4
+                        .text-center Radius
+                        el-slider(
+                            v-model="radius",
+                            :min="1",
+                            :max="10",
+                            :step="1",
+                        )
+                    .col-md-4
+                        .text-center Select a place category
+                        el-select(
+                            :style="{ display: 'block' }",
+                            v-model="category",
+                            placeholder="Categories",
+                        )
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-
 export default {
     components: {
-        Logo
+    },
+    data() {
+        return {
+            menu: 'filters',
+            city: '',
+            radius: 10,
+            category: null,
+            locationChoice: 'location'
+        }
     }
 }
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+<style lang="scss" scoped>
+.button {
+    margin: 5px;
 }
-
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
+.buttons {
+    margin: 50px;
+    padding: 10px;
 }
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.form {
+    padding: 20px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template lang="pug">
     footer
-        p Footer
+        | Find places with VueJS and Foursquare APIs
 </template>
 
 <script>

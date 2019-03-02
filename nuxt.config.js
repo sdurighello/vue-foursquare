@@ -26,12 +26,19 @@ module.exports = {
     /*
   ** Global CSS
   */
-    css: ['element-ui/lib/theme-chalk/index.css'],
+    css: [
+        'element-ui/lib/theme-chalk/index.css',
+        'bootstrap/dist/css/bootstrap.css',
+        'bootstrap-vue/dist/bootstrap-vue.css'
+    ],
 
     /*
   ** Plugins to load before mounting the App
   */
-    plugins: ['@/plugins/element-ui'],
+    plugins: [
+        '@/plugins/element-ui',
+        '@/plugins/bootstrap-vue'
+    ],
 
     /*
   ** Nuxt.js modules
