@@ -67,7 +67,7 @@ export default {
         },
         selectVenue() {
             // Clean the comments box at new selections
-            this.$emit('resetComment', this.venue)
+            this.$emit('selectVenue', this.venue)
             this.$store.dispatch('selectVenue', this.venue)
         }
     }

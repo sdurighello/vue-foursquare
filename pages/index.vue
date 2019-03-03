@@ -89,7 +89,7 @@ body
                             venue-card(
                                 :venue="venue",
                                 :selectable="true",
-                                @resetComment="resetComment"
+                                @selectVenue="setComment"
                             )
                         .col-md-8
                             el-card(
@@ -212,8 +212,8 @@ export default {
         cancelUpdateComment() {
             this.selectedVenueComment = this.selectedVenue.comment
         },
-        resetComment() {
-            this.selectedVenueComment = ''
+        setComment(venue) {
+            this.selectedVenueComment = venue.comment
         }
     }
 }
