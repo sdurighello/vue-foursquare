@@ -6,8 +6,10 @@
         //-     v-if="selectedVenueDetails.photos && selectedVenueDetails.photos.length > 0",
         //-     src="selectedVenueDetails.photos[0]"
         //- )
-        h6 {{selectedVenue.name}}
-        p {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
+        h3 {{selectedVenue.name}}
+        p
+            i(class="el-icon-location") &nbsp;
+            span {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
         p {{selectedVenue.location.distance}} meters from your location
         p Category: {{selectedVenue.categories[0].name}}
         p(v-if="selectedVenue.verified") Verified!
@@ -25,7 +27,6 @@
         ) Update
         el-button.button.float-right(
             @click.stop="cancelUpdateComment",
-            type="danger",
             size="mini",
             :round="true"
         ) Cancel

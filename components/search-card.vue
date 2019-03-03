@@ -3,27 +3,29 @@ el-card
     el-form
         el-form-item
             p
-                |Use
-                el-button(
-                    type="text",
-                    @click="locationChoice = 'location'",
-                )    your location
-                |  or enter
-                el-button(
-                    type="text",
-                    @click="locationChoice = 'city'",
-                )  a city
+                b
+                    |Use &nbsp;
+                    el-button(
+                        type="text",
+                        @click="locationChoice = 'location'",
+                    ) your location &nbsp;
+                    | or enter &nbsp;
+                    el-button(
+                        type="text",
+                        @click="locationChoice = 'city'",
+                    ) a city
             el-input(
-                v-if="locationChoice === 'city'"
-                placeholder="Enter city",
+                v-if="locationChoice === 'city'",
                 v-model="city",
+                placeholder="Enter city"
             )
             p(v-if="locationChoice === 'location' && coordinates.length > 0")
                 i(class="el-icon-location") Latitude: {{coordinates[0]}}, Longitude: {{coordinates[1]}}
             p(v-if="locationChoice === 'location' && coordinates.length === 0")
                 | No coordinates found
         el-form-item
-            p Maximum radius from location: {{this.radius}} km
+            p
+                b Maximum radius from location: {{this.radius}} km
             el-slider(
                 v-model="radius",
                 :min="1",
@@ -31,11 +33,13 @@ el-card
                 :step="1",
             )
         el-form-item
-            p Select a place category
+            p
+                b Select a place category
             el-select(
-                :style="{ display: 'block' }",
                 v-model="selectedCategory",
                 placeholder="Categories",
+                :style="{ display: 'block' }",
+                :clearable="true"
             )
                 el-option(
                     v-for="category in categories",
@@ -44,10 +48,11 @@ el-card
                     :label="category.name"
                 )
         el-form-item
-            p Keyword
+            p
+                b Keyword
             el-input(
-                placeholder="Enter a keyword to match",
                 v-model="keyword",
+                placeholder="Enter a keyword to match"
             )
         el-form-item
             p
