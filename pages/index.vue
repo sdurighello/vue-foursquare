@@ -36,11 +36,11 @@ body
                                         p(v-if="locationChoice === 'location' && coordinates.length === 0")
                                             | No coordinates found
                                     el-form-item
-                                        p Radius in km
+                                        p Maximum radius from location: {{this.radius}} km
                                         el-slider(
                                             v-model="radius",
                                             :min="1",
-                                            :max="10",
+                                            :max="50",
                                             :step="1",
                                         )
                                     el-form-item
@@ -121,7 +121,13 @@ body
                                         :round="true"
                                     ) Remove from favourites
                         .col-md-8
-                            el-card(v-if="selectedVenue && selectedVenue.id")
+                            el-card(
+                                v-if="selectedVenue && selectedVenue.id",
+                            )
+                                img(
+                                    v-if="selectedVenueDetails.photos && selectedVenueDetails.photos.length > 0",
+                                    src="selectedVenueDetails.photos[0]"
+                                )
                                 p {{selectedVenue.name}}
                                 p {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
                                 p {{selectedVenue.location.distance}} meters
@@ -157,7 +163,7 @@ export default {
         return {
             menu: 'filters',
             city: '',
-            radius: 5,
+            radius: 20,
             category: null,
             locationChoice: 'location',
             keyword: '',
@@ -165,7 +171,8 @@ export default {
             coordinates: '',
             venues: [],
             selectedVenue: null,
-            selectedVenueComment: ''
+            selectedVenueComment: '',
+            selectedVenueDetails: null
         }
     },
     computed: {
@@ -199,12 +206,9 @@ export default {
             }
         },
         getCurrentPosition() {
-            return new Promise(function (resolve, reject) {
-                return navigator.geolocation.getCurrentPosition(function (position) {
-                    return resolve([position.coords.latitude, position.coords.longitude])
-                }, function (err) {
-                    return reject(err)
-                })
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(
+                    position => resolve([position.coords.latitude, position.coords.longitude]), err => reject(err))
             })
         },
         async search() {
@@ -224,6 +228,17 @@ export default {
                 console.log(err)
             }
         },
+        async getVenueDetailsById(venueId) {
+            // const details = ['photos', 'tips', 'hours', 'menu', 'links']
+            // On free account only 1 photo and 1 tip available
+            const details = ['photos']
+            const promisesArray = details.map(detail => getApi(`venues/${venueId}/${detail}`))
+            const responseArray = await Promise.all(promisesArray)
+            const result = {}
+            details.forEach((d, i) => (result[d] = responseArray[i].data.response))
+            result.photos = result.photos.photos.items.map(item => `${item.prefix}300x300${item.suffix}`)
+            return result
+        },
         addToFavourites(venue) {
             venue.favourite = true
             this.$store.dispatch('addFavourite', venue)
@@ -233,13 +248,21 @@ export default {
             this.resetSelectedVenue()
         },
         selectVenue(venue) {
-            console.log('selected', venue)
-            this.selectedVenue = venue
-            this.selectedVenueComment = venue.comment
+            try {
+                console.log('selected', venue)
+                this.resetSelectedVenue()
+                // this.selectedVenueDetails = await this.getVenueDetailsById(venue.id)
+                console.log('selectedVenueDetails', this.selectedVenueDetails)
+                this.selectedVenue = venue
+                this.selectedVenueComment = venue.comment
+            } catch (err) {
+                console.log(err)
+            }
         },
         resetSelectedVenue() {
             this.selectedVenue = null
             this.selectedVenueComment = ''
+            this.selectedVenueDetails = null
         },
         updateComment() {
             this.$store.dispatch('updateComment', { venue: this.selectedVenue, comment: this.selectedVenueComment })
@@ -264,5 +287,12 @@ export default {
 }
 .border {
     border: '6px red solid';
+}
+.details {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: black;
+    background-image: url(https://fastly.4sqi.net/img/general/500x500/nyTc6JbYQ4wtk4f5DukJz36zXtUYOYht94cZjawYhtY.jpg);
 }
 </style>
