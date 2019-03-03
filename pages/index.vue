@@ -47,9 +47,15 @@ body
                                         p Select a place category
                                         el-select(
                                             :style="{ display: 'block' }",
-                                            v-model="category",
+                                            v-model="selectedCategory",
                                             placeholder="Categories",
                                         )
+                                            el-option(
+                                                v-for="category in categories",
+                                                :key="category.id",
+                                                :value="category.id",
+                                                :label="category.name"
+                                            )
                                     el-form-item
                                         p Keyword
                                         el-input(
@@ -164,7 +170,6 @@ export default {
             menu: 'filters',
             city: '',
             radius: 20,
-            category: null,
             locationChoice: 'location',
             keyword: '',
             selectedTab: 'filters',
@@ -172,7 +177,9 @@ export default {
             venues: [],
             selectedVenue: null,
             selectedVenueComment: '',
-            selectedVenueDetails: null
+            selectedVenueDetails: null,
+            selectedCategory: null,
+            categories: []
         }
     },
     computed: {
@@ -190,6 +197,7 @@ export default {
     async created() {
         this.coordinates = await this.getUserPosition()
         console.log('ciao', this.coordinates)
+        await this.setCategories()
     },
     methods: {
         switchTabs(tab) {
@@ -211,11 +219,21 @@ export default {
                     position => resolve([position.coords.latitude, position.coords.longitude]), err => reject(err))
             })
         },
+        async setCategories() {
+            try {
+                const categoriesRes = await getApi('venues/categories')
+                console.log('categories', categoriesRes)
+                this.categories = categoriesRes.data.response.categories.map(({ id, name }) => ({ id, name }))
+            } catch (err) {
+                console.log(err)
+            }
+        },
         async search() {
             try {
                 const params = {}
                 if (this.radius) { params.radius = this.radius }
                 if (this.keyword) { params.keyword = this.keyword }
+                if (this.selectedCategory) { params.categoryId = this.selectedCategory }
                 if (this.locationChoice === 'location' && this.coordinates) {
                     params.ll = this.coordinates.join(',')
                 }
