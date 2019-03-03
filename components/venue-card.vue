@@ -52,7 +52,7 @@ export default {
             return this.$store.getters.getSelectedVenue
         },
         isSelected() {
-            return this.selectedVenue && this.selectedVenue.id === this.venue.id
+            return this.selectedVenue && this.selectedVenue.id === this.venue.id && this.selectable
         },
         favourites() {
             return this.$store.getters.getFavourites
@@ -66,7 +66,9 @@ export default {
             this.$store.dispatch('removeFavourite', this.venue)
         },
         selectVenue() {
-            this.$store.dispatch('selectVenue', this.venue)
+            if (this.selectable) {
+                this.$store.dispatch('selectVenue', this.venue)
+            }
         }
     }
 }

@@ -6,11 +6,11 @@
         //-     v-if="selectedVenueDetails.photos && selectedVenueDetails.photos.length > 0",
         //-     src="selectedVenueDetails.photos[0]"
         //- )
-        p {{selectedVenue.name}}
+        h6 {{selectedVenue.name}}
         p {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
-        p {{selectedVenue.location.distance}} meters
-        p {{selectedVenue.categories[0].name}}
-        p {{selectedVenue.verified}}
+        p {{selectedVenue.location.distance}} meters from your location
+        p Category: {{selectedVenue.categories[0].name}}
+        p(v-if="selectedVenue.verified") Verified!
         el-input(
             type="textarea",
             :rows="10",
