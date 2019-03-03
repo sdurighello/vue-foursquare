@@ -6,7 +6,7 @@
             ) Find your favourite places in town
 </template>
 
-<style lang="scss", scoped>
+<style lang="scss" scoped>
     .jumbotron {
         background-image: url("/jumbotron.jpg");
         background-size: cover;

@@ -71,69 +71,34 @@ body
                         .col-md-8
                             .row
                                 .col-md-4(
-                                    v-for="venue in computedVenues",
+                                    v-for="venue in venues",
                                     :key="venue.id"
                                 )
-                                    el-card(
-                                        :body-style="{ padding: '0px' }",
-                                        :style="{ height: '200px', marginBottom: '20px', cursor: 'pointer' }",
-                                        @click.native="selectVenue(venue)"
+                                    venue-card(
+                                        :venue="venue",
                                     )
-                                        div(:style="{ padding: '14px' }")
-                                            p {{venue.name}}
-                                            el-button.float-right(
-                                                v-if="!venue.favourite",
-                                                @click.stop="addToFavourites(venue)",
-                                                type="success",
-                                                size="mini",
-                                                :round="true"
-                                            ) Add to favourites
-                                            el-button.float-right(
-                                                v-if="venue.favourite",
-                                                @click.stop="removeFromFavourites(venue)",
-                                                type="danger",
-                                                size="mini",
-                                                :round="true"
-                                            ) Remove from favourites
                 el-tab-pane(
                     label="My favourite venues",
                     name="favourites"
                 )
                     .row
-                        .col-md-4
-                            el-card(
-                                v-for="venue in favourites",
-                                :key="venue.id"
-                                :body-style="{ padding: '0px' }",
-                                :style="{ height: '200px', marginBottom: '20px', cursor: 'pointer' }",
-                                :class="{ border: selectedVenue && selectedVenue.id === venue.id }",
-                                :shadow="selectedVenue && selectedVenue.id === venue.id ? 'never' : 'always'",
-                                @click.native="selectVenue(venue)"
+                        .col-md-4(
+                            v-for="venue in favourites",
+                            :key="venue.id"
+                        )
+                            venue-card(
+                                :venue="venue",
+                                :selectable="true",
+                                @resetComment="resetComment"
                             )
-                                div(:style="{ padding: '14px' }")
-                                    p {{venue.name}}
-                                    el-button.float-right(
-                                        v-if="!venue.favourite",
-                                        @click.stop="addToFavourites(venue)",
-                                        type="success",
-                                        size="mini",
-                                        :round="true"
-                                    ) Add to favourites
-                                    el-button.float-right(
-                                        v-if="venue.favourite",
-                                        @click.stop="removeFromFavourites(venue)",
-                                        type="danger",
-                                        size="mini",
-                                        :round="true"
-                                    ) Remove from favourites
                         .col-md-8
                             el-card(
                                 v-if="selectedVenue && selectedVenue.id",
                             )
-                                img(
-                                    v-if="selectedVenueDetails.photos && selectedVenueDetails.photos.length > 0",
-                                    src="selectedVenueDetails.photos[0]"
-                                )
+                                //- img(
+                                //-     v-if="selectedVenueDetails.photos && selectedVenueDetails.photos.length > 0",
+                                //-     src="selectedVenueDetails.photos[0]"
+                                //- )
                                 p {{selectedVenue.name}}
                                 p {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
                                 p {{selectedVenue.location.distance}} meters
@@ -161,9 +126,11 @@ body
 
 <script>
 import { getApi } from '@/services/api'
+import venueCard from '@/components/venue-card'
 
 export default {
     components: {
+        venueCard
     },
     data() {
         return {
@@ -174,10 +141,7 @@ export default {
             keyword: '',
             selectedTab: 'filters',
             coordinates: '',
-            venues: [],
-            selectedVenue: null,
             selectedVenueComment: '',
-            selectedVenueDetails: null,
             selectedCategory: null,
             categories: []
         }
@@ -186,17 +150,15 @@ export default {
         favourites() {
             return this.$store.getters.getFavourites
         },
-        computedVenues() {
-            return this.venues.map((venue) => {
-                const found = this.favourites.find(fav => fav.id === venue.id)
-                venue.favourite = !!found
-                return venue
-            })
+        venues() {
+            return this.$store.getters.getVenues
+        },
+        selectedVenue() {
+            return this.$store.getters.getSelectedVenue
         }
     },
     async created() {
         this.coordinates = await this.getUserPosition()
-        console.log('ciao', this.coordinates)
         await this.setCategories()
     },
     methods: {
@@ -239,54 +201,19 @@ export default {
                 }
                 if (this.locationChoice === 'city') { params.near = this.city }
                 console.log(params)
-                const placesRes = await getApi('venues/search', params)
-                console.log(placesRes)
-                this.venues = placesRes.data.response.venues
+                await this.$store.dispatch('fetchVenues', params)
             } catch (err) {
                 console.log(err)
             }
-        },
-        async getVenueDetailsById(venueId) {
-            // const details = ['photos', 'tips', 'hours', 'menu', 'links']
-            // On free account only 1 photo and 1 tip available
-            const details = ['photos']
-            const promisesArray = details.map(detail => getApi(`venues/${venueId}/${detail}`))
-            const responseArray = await Promise.all(promisesArray)
-            const result = {}
-            details.forEach((d, i) => (result[d] = responseArray[i].data.response))
-            result.photos = result.photos.photos.items.map(item => `${item.prefix}300x300${item.suffix}`)
-            return result
-        },
-        addToFavourites(venue) {
-            venue.favourite = true
-            this.$store.dispatch('addFavourite', venue)
-        },
-        removeFromFavourites(venue) {
-            this.$store.dispatch('removeFavourite', venue)
-            this.resetSelectedVenue()
-        },
-        selectVenue(venue) {
-            try {
-                console.log('selected', venue)
-                this.resetSelectedVenue()
-                // this.selectedVenueDetails = await this.getVenueDetailsById(venue.id)
-                console.log('selectedVenueDetails', this.selectedVenueDetails)
-                this.selectedVenue = venue
-                this.selectedVenueComment = venue.comment
-            } catch (err) {
-                console.log(err)
-            }
-        },
-        resetSelectedVenue() {
-            this.selectedVenue = null
-            this.selectedVenueComment = ''
-            this.selectedVenueDetails = null
         },
         updateComment() {
             this.$store.dispatch('updateComment', { venue: this.selectedVenue, comment: this.selectedVenueComment })
         },
         cancelUpdateComment() {
             this.selectedVenueComment = this.selectedVenue.comment
+        },
+        resetComment() {
+            this.selectedVenueComment = ''
         }
     }
 }
