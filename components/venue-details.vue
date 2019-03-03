@@ -43,6 +43,11 @@ export default {
             return this.$store.getters.getSelectedVenue
         }
     },
+    watch: {
+        selectedVenue(newVal) {
+            this.setComment(newVal.comment)
+        }
+    },
     methods: {
         updateComment() {
             this.$store.dispatch('updateComment', { venue: this.selectedVenue, comment: this.selectedVenueComment })
@@ -50,8 +55,8 @@ export default {
         cancelUpdateComment() {
             this.selectedVenueComment = this.selectedVenue.comment
         },
-        setComment(venue) {
-            this.selectedVenueComment = venue.comment
+        setComment(comment) {
+            this.selectedVenueComment = comment
         }
     }
 }
