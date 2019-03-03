@@ -143,7 +143,7 @@ export default {
                 this.isSearching = true
                 const params = {}
                 if (this.radius) { params.radius = this.radius }
-                if (this.keyword) { params.keyword = this.keyword }
+                if (this.keyword) { params.query = this.keyword }
                 if (this.selectedCategory) { params.categoryId = this.selectedCategory }
                 if (this.locationChoice === 'location' && this.coordinates) {
                     params.ll = this.coordinates.join(',')

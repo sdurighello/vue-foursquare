@@ -7,11 +7,10 @@
         //-     src="selectedVenueDetails.photos[0]"
         //- )
         h3 {{selectedVenue.name}}
-        p
-            i(class="el-icon-location") &nbsp;
-            span {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
+        p(v-if="formattedAddress")
+            i(class="el-icon-location") {{formattedAddress}}
         p(v-if="selectedVenue.location.distance") {{selectedVenue.location.distance}} meters from your location
-        p Category: {{selectedVenue.categories[0].name}}
+        p(v-if="primaryCategory") Category: {{primaryCategory}}
         p(v-if="selectedVenue.verified") Verified!
         el-input(
             type="textarea",
@@ -42,6 +41,19 @@ export default {
     computed: {
         selectedVenue() {
             return this.$store.getters.getSelectedVenue
+        },
+        formattedAddress() {
+            if (this.selectedVenue) {
+                return this.selectedVenue.location.formattedAddress.join(', ')
+            }
+            return ''
+        },
+        primaryCategory() {
+            if (this.selectedVenue && this.selectedVenue.categories.length > 0) {
+                const primaryCategory = this.selectedVenue.categories.find(c => c.primary)
+                return primaryCategory && primaryCategory.name
+            }
+            return ''
         }
     },
     watch: {
@@ -55,7 +67,7 @@ export default {
     },
     methods: {
         updateComment() {
-            this.$store.dispatch('updateComment', { venue: this.selectedVenue, comment: this.selectedVenueComment })
+            this.$store.dispatch('updateComment', { venue: this.selectedVenue, comment: this.selectedVenueComment, vm: this })
         },
         cancelUpdateComment() {
             this.selectedVenueComment = this.selectedVenue.comment

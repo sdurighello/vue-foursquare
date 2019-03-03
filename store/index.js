@@ -70,17 +70,31 @@ export const actions = {
     resetSelectedVenue: ({ commit }) => {
         commit('resetSelectedVenue')
     },
-    addFavourite: ({ commit }, venue) => {
+    addFavourite: ({ commit }, { venue, vm }) => {
         commit('addFavourite', venue)
         commit('updateVenue', { id: venue.id, favourite: true })
+        vm.$notify({
+            title: 'Added to favourites',
+            message: venue.name,
+            duration: 3000
+        })
     },
-    removeFavourite: ({ commit }, venue) => {
+    removeFavourite: ({ commit }, { venue, vm }) => {
         commit('removeFavourite', venue)
         commit('updateVenue', { id: venue.id, favourite: false })
+        vm.$notify({
+            title: 'Removed from favourites',
+            message: venue.name,
+            duration: 3000
+        })
     },
-    updateComment: ({ commit }, payload) => {
-        // payload = { venue, comment }
-        commit('updateFavourite', { id: payload.venue.id, comment: payload.comment })
+    updateComment: ({ commit }, { venue, comment, vm }) => {
+        commit('updateFavourite', { id: venue.id, comment: comment })
+        vm.$notify({
+            title: 'Comment successfully updated',
+            message: '',
+            duration: 3000
+        })
     },
     fetchVenues: async ({ commit }, params) => {
         const placesRes = await getApi('venues/search', params)

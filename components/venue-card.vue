@@ -61,14 +61,14 @@ export default {
     },
     methods: {
         addToFavourites() {
-            this.$store.dispatch('addFavourite', this.venue)
+            this.$store.dispatch('addFavourite', { venue: this.venue, vm: this })
         },
         removeFromFavourites() {
             // Reset selectedVenue if it was this favourite
-            if (this.venue.id === this.selectedVenue.id) {
+            if (this.selectedVenue && this.selectedVenue.id === this.venue.id) {
                 this.$store.dispatch('resetSelectedVenue')
             }
-            this.$store.dispatch('removeFavourite', this.venue)
+            this.$store.dispatch('removeFavourite', { venue: this.venue, vm: this })
         },
         selectVenue() {
             if (this.selectable) {
