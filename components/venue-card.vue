@@ -6,6 +6,7 @@
         :shadow="isSelected ? 'never' : 'always'",
         @click.native="selectVenue()"
     )
+        .details
         div(:style="{ padding: '14px' }")
             p {{venue.name}}
             el-button.float-right(
@@ -84,5 +85,13 @@ export default {
 }
 .border {
     border: '6px red solid';
+}
+.details {
+    min-height: 100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: black;
+    background-image: url(https://via.placeholder.com/500x250);
 }
 </style>
