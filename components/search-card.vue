@@ -140,6 +140,13 @@ export default {
         },
         async search() {
             try {
+                if (!this.coordinates && !this.city) {
+                    return this.$notify({
+                        title: 'Cannot search yet. Location is still unknown...',
+                        message: 'Retry later or enter a city manually',
+                        duration: 3000
+                    })
+                }
                 this.isSearching = true
                 const params = {}
                 if (this.radius) { params.radius = this.radius }
