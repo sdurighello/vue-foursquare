@@ -10,7 +10,7 @@
 
 - Get the user location and show a list of available venues
 
-- Decide which venues and details are relevant to the user
+- Allow the user to see more detailed information about a favourite venue
 
 - Give the user the ability to adjust some search parameters (e.g. location, radius, venue types)
 
@@ -35,11 +35,11 @@ by inputting a *city or location name*
 
 ## Technical points
 
-- Using Vuex with for state management, including getters, mutations and async actions
+- Using Vuex for state management, including getters, mutations and async actions
 
 - Code modularization with separate components and services
 
-- Error management through catchers and notifications
+- Error management through catchers and event notifications to users
 
 ## Out of scope
 
