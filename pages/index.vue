@@ -13,15 +13,24 @@ body
                     .row
                         .col-md-4
                             div(:style="{ 'margin-right': '5px' }")
-                                search-card
-                        .col-md-8
-                            .row
+                                search-card(
+                                    @updateIsSearching="updateIsSearching"
+                                )
+                        .col-md-8(v-loading="isSearching")
+                            .row(v-if="venues.length > 0")
                                 .col-md-4(
                                     v-for="venue in venues",
                                     :key="venue.id"
                                 )
                                     venue-card(
                                         :venue="venue",
+                                    )
+                            .row(v-if="venues.length === 0")
+                                .col-md-12.text-center
+                                    el-alert(
+                                        title="No results to show",
+                                        type="warning",
+                                        :closable="false"
                                     )
                 el-tab-pane(
                     label="My favourite venues",
@@ -52,7 +61,8 @@ export default {
     },
     data() {
         return {
-            selectedTab: 'filters'
+            selectedTab: 'filters',
+            isSearching: false
         }
     },
     computed: {
@@ -66,30 +76,10 @@ export default {
     methods: {
         switchTabs(tab) {
             this.selectedTab = tab.name
+        },
+        updateIsSearching(value) {
+            this.isSearching = value
         }
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.button {
-    margin: 5px;
-}
-.buttons {
-    margin: 50px;
-    padding: 10px;
-}
-.form {
-    padding: 20px;
-}
-.border {
-    border: '6px red solid';
-}
-.details {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: black;
-    background-image: url(https://fastly.4sqi.net/img/general/500x500/nyTc6JbYQ4wtk4f5DukJz36zXtUYOYht94cZjawYhtY.jpg);
-}
-</style>

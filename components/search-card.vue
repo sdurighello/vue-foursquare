@@ -78,7 +78,8 @@ export default {
             keyword: '',
             coordinates: '',
             selectedCategory: null,
-            categories: []
+            categories: [],
+            isSearching: false
         }
     },
     computed: {
@@ -90,6 +91,11 @@ export default {
         },
         selectedVenue() {
             return this.$store.getters.getSelectedVenue
+        }
+    },
+    watch: {
+        isSearching(newVal) {
+            this.$emit('updateIsSearching', newVal)
         }
     },
     async created() {
@@ -105,6 +111,11 @@ export default {
                 console.log('location not supported by this browser')
             } catch (err) {
                 console.log(err)
+                this.$notify({
+                    title: 'Error gettign location',
+                    message: err,
+                    duration: 3000
+                })
             }
         },
         getCurrentPosition() {
@@ -120,10 +131,16 @@ export default {
                 this.categories = categoriesRes.data.response.categories.map(({ id, name }) => ({ id, name }))
             } catch (err) {
                 console.log(err)
+                this.$notify({
+                    title: 'Error getting categories',
+                    message: err,
+                    duration: 3000
+                })
             }
         },
         async search() {
             try {
+                this.isSearching = true
                 const params = {}
                 if (this.radius) { params.radius = this.radius }
                 if (this.keyword) { params.keyword = this.keyword }
@@ -134,33 +151,17 @@ export default {
                 if (this.locationChoice === 'city') { params.near = this.city }
                 console.log(params)
                 await this.$store.dispatch('fetchVenues', params)
+                this.isSearching = false
             } catch (err) {
+                this.isSearching = false
                 console.log(err)
+                this.$notify({
+                    title: 'Error searching for venues',
+                    message: err,
+                    duration: 3000
+                })
             }
         }
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.button {
-    margin: 5px;
-}
-.buttons {
-    margin: 50px;
-    padding: 10px;
-}
-.form {
-    padding: 20px;
-}
-.border {
-    border: '6px red solid';
-}
-.details {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: black;
-    background-image: url(https://fastly.4sqi.net/img/general/500x500/nyTc6JbYQ4wtk4f5DukJz36zXtUYOYht94cZjawYhtY.jpg);
-}
-</style>

@@ -10,7 +10,7 @@
         p
             i(class="el-icon-location") &nbsp;
             span {{selectedVenue.location.formattedAddress[0]}}, {{selectedVenue.location.formattedAddress[1]}}, {{selectedVenue.location.formattedAddress[2]}}
-        p {{selectedVenue.location.distance}} meters from your location
+        p(v-if="selectedVenue.location.distance") {{selectedVenue.location.distance}} meters from your location
         p Category: {{selectedVenue.categories[0].name}}
         p(v-if="selectedVenue.verified") Verified!
         el-input(
@@ -46,7 +46,11 @@ export default {
     },
     watch: {
         selectedVenue(newVal) {
-            this.setComment(newVal.comment)
+            if (newVal) {
+                this.setComment(newVal.comment)
+            } else {
+                this.setComment('')
+            }
         }
     },
     methods: {
@@ -66,22 +70,5 @@ export default {
 <style lang="scss" scoped>
 .button {
     margin: 5px;
-}
-.buttons {
-    margin: 50px;
-    padding: 10px;
-}
-.form {
-    padding: 20px;
-}
-.border {
-    border: '6px red solid';
-}
-.details {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-color: black;
-    background-image: url(https://fastly.4sqi.net/img/general/500x500/nyTc6JbYQ4wtk4f5DukJz36zXtUYOYht94cZjawYhtY.jpg);
 }
 </style>

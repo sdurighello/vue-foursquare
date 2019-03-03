@@ -63,6 +63,10 @@ export default {
             this.$store.dispatch('addFavourite', this.venue)
         },
         removeFromFavourites() {
+            // Reset selectedVenue if it was this favourite
+            if (this.venue.id === this.selectedVenue.id) {
+                this.$store.dispatch('resetSelectedVenue')
+            }
             this.$store.dispatch('removeFavourite', this.venue)
         },
         selectVenue() {
