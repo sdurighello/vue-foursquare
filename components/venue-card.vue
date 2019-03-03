@@ -66,8 +66,6 @@ export default {
             this.$store.dispatch('removeFavourite', this.venue)
         },
         selectVenue() {
-            // Clean the comments box at new selections
-            this.$emit('selectVenue', this.venue)
             this.$store.dispatch('selectVenue', this.venue)
         }
     }
