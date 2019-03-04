@@ -12,7 +12,7 @@ body
                 )
                     .row
                         .col-md-4
-                            div(:style="{ 'margin-right': '5px' }")
+                            div(:style="{ 'margin': '0 5px 10px 0' }")
                                 search-card(
                                     @updateIsSearching="updateIsSearching"
                                 )

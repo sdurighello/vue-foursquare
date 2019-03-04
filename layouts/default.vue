@@ -1,7 +1,7 @@
 <template lang="pug">
     div
         app-header
-        nuxt
+        nuxt.body
         app-footer
 </template>
 
@@ -32,9 +32,8 @@ html {
     min-height: 100%;
 }
 
-body {
+.body {
     margin: 5px 5px 50px 5px;
-    /* bottom = footer height */
 }
 
 footer {
@@ -53,6 +52,5 @@ footer {
     color: darkblue;
     text-align: center;
     letter-spacing: 0.03em;
-    margin-top: 10px;
 }
 </style>

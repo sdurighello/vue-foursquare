@@ -50,6 +50,8 @@ by inputting a *city or location name*
 ## Build Setup
 
 ``` bash
+# Use NODE version 8.10.0
+
 # install dependencies
 $ yarn install
 
