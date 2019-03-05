@@ -46,6 +46,13 @@ body
                             )
                         .col-md-8
                             venue-details
+                    .row(v-if="favourites.length === 0")
+                                .col-md-12.text-center
+                                    el-alert(
+                                        title="You don't have any favourites yet. Go to 'find new venues' to add some",
+                                        type="warning",
+                                        :closable="false"
+                                    )
 </template>
 
 <script>

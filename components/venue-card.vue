@@ -2,7 +2,7 @@
     el-card(
         :body-style="{ padding: '0px' }",
         :style="{ height: '200px', 'margin-bottom': '20px' }",
-        :class="{ 'cursor-pointer': selectable, border: isSelected }",
+        :class="{ 'cursor-pointer': selectable && !isSelected, border: isSelected }",
         :shadow="isSelected ? 'never' : 'always'",
         @click.native="selectVenue()"
     )
@@ -81,7 +81,7 @@ export default {
 
 <style lang="scss" scoped>
 .cursor-pointer {
-    cursor: 'pointer';
+    cursor: pointer;
 }
 .border {
     border: '6px red solid';
