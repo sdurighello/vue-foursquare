@@ -1,11 +1,8 @@
 <template lang="pug">
     footer
-        | Find places with VueJS and Foursquare APIs
+        span Find places with VueJS and Foursquare APIs. Visit the &nbsp;
+        a(
+            target="_blank",
+            :href="'https://github.com/sdurighello/vue-foursquare'"
+        ) Github repo
 </template>
-
-<script>
-</script>
-
-<style scoped>
-
-</style>
