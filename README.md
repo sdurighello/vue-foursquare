@@ -2,6 +2,8 @@
 
 > Vue app using Foursquare APIs and user location
 
+> App live at https://vue-foursquare-gy1r6e0w5.now.sh
+
 ![landing page](./static/landing_page.png)
 
 ## Objective
