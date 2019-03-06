@@ -19,9 +19,9 @@ el-card
                 v-model="city",
                 placeholder="Enter city"
             )
-            p(v-if="locationChoice === 'location' && coordinates.length > 0")
+            p(v-if="locationChoice === 'location' && coordinates")
                 i(class="el-icon-location") Latitude: {{coordinates[0]}}, Longitude: {{coordinates[1]}}
-            p(v-if="locationChoice === 'location' && coordinates.length === 0")
+            p(v-if="locationChoice === 'location' && !coordinates")
                 | No coordinates found
         el-form-item
             p
