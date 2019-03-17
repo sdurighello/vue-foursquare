@@ -1,3 +1,5 @@
+// import details:  nuxt.js/packages/vue-app/template/store.js
+
 import { getApi } from '@/services/api'
 
 export const state = () => ({
