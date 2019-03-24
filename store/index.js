@@ -1,3 +1,5 @@
+// import details:  nuxt.js/packages/vue-app/template/store.js
+
 import { getApi } from '@/services/api'
 
 export const state = () => ({
@@ -10,6 +12,7 @@ export const getters = {
     getFavourites: state => state.favourites,
     getVenues: state => state.venues,
     getVenueById: state => id => state.venues.find(v => v.id === id),
+    getFavouriteById: state => id => state.favourites.find(v => v.id === id),
     getSelectedVenue: state => state.selectedVenue
 }
 
@@ -22,7 +25,7 @@ export const mutations = {
         state.selectedVenue = null
     },
     addFavourite: (state, venue) => {
-        const changedVenue = Object.assign({}, venue, { favourite: true })
+        const changedVenue = Object.assign({}, venue, { favourite: true, comment: '' })
         state.favourites.push(changedVenue)
     },
     removeFavourite: (state, venue) => {
@@ -88,8 +91,11 @@ export const actions = {
             duration: 3000
         })
     },
-    updateComment: ({ commit }, { venue, comment, vm }) => {
+    updateComment: ({ commit, getters }, { venue, comment, vm }) => {
         commit('updateFavourite', { id: venue.id, comment: comment })
+        // Update the selected with the new comment
+        const changedVenue = getters.getFavouriteById(venue.id)
+        commit('selectVenue', changedVenue)
         vm.$notify({
             title: 'Comment successfully updated',
             message: '',
